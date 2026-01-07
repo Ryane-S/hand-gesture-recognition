@@ -1,4 +1,4 @@
-"""Hand Sign Recognition Classifier using MobileNetV2"""
+"""Hand Sign Recognition Classifier using MobileNetV2."""
 
 import glob
 import os

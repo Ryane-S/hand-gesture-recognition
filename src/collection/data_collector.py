@@ -1,4 +1,5 @@
 import math
+import string
 import time
 
 import cv2
@@ -13,10 +14,10 @@ classifier = Classifier("data/model.keras", "data/label.txt")
 offset = 20
 img_size = 300
 counter = 0
-labels = ["A", "B", "C"]
+labels = list(string.ascii_uppercase)
 
 # We save images when we press the S key (to train our model)
-folder = "data/C"
+folder = "data/F"
 
 while True:
     success, img = cap.read()
