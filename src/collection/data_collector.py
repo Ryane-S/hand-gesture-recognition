@@ -23,10 +23,10 @@ while True:
         hand = hands[0]
         x, y, w, h = hand['bbox']
 
-        # Image blanche de référence
+        # Reference white image
         img_white = np.ones((img_size, img_size, 3), np.uint8) * 255
 
-        # Vérifier les limites
+        # Check the limits
         img_height, img_width = img.shape[:2]
         y1 = max(0, y - offset)
         y2 = min(img_height, y + h + offset)
@@ -36,24 +36,24 @@ while True:
         if y2 > y1 and x2 > x1:
             img_crop = img[y1:y2, x1:x2]
             
-            # CALCULER LE RAPPORT D'ASPECT ET REDIMENSIONNER
+            # Compute the aspect ratio
             aspect_ratio = h / w
             
-            if aspect_ratio > 1:  # Portrait (h > w)
+            if aspect_ratio > 1: 
                 k = img_size / h
                 w_calculated = math.ceil(k * w)
                 img_resize = cv2.resize(img_crop, (w_calculated, img_size))
                 
-                # Centrer horizontalement dans img_white
+                # Center the cropped image horizontally
                 w_gap = math.ceil((img_size - w_calculated) / 2)
                 img_white[:, w_gap:w_gap + w_calculated] = img_resize
                 
-            else:  # Paysage (w >= h)
+            else:
                 k = img_size / w
                 h_calculated = math.ceil(k * h)
                 img_resize = cv2.resize(img_crop, (img_size, h_calculated))
                 
-                # Centrer verticalement dans img_white
+                # Center the cropped image vertically
                 h_gap = math.ceil((img_size - h_calculated) / 2)
                 img_white[h_gap:h_gap + h_calculated, :] = img_resize
             
