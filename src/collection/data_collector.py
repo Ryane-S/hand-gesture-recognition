@@ -1,8 +1,9 @@
-import cv2
-from cvzone.HandTrackingModule import HandDetector
-import numpy as np
 import math
 import time
+
+import cv2
+import numpy as np
+from cvzone.HandTrackingModule import HandDetector
 
 cap = cv2.VideoCapture(0) # 0 is the id number
 detector = HandDetector(maxHands=1)

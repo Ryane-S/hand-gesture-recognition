@@ -1,9 +1,12 @@
-import keras
-import cv2
-import numpy as np
-import string
+"""Hand Sign Recognition Classifier"""
+
 import glob
 import os
+import string
+
+import cv2
+import keras
+import numpy as np
 
 english_alphabet = list(string.ascii_uppercase)
 dict_classes = {label:character for label,character in enumerate(english_alphabet)}
@@ -113,6 +116,7 @@ def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
 
 
 def main():
+    """Run the model on the loaded dataset."""
     # Load the dataset
     x_train, y_train, x_test, y_test = load_data()
 
