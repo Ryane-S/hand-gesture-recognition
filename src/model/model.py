@@ -1,4 +1,4 @@
-"""Hand Sign Recognition Classifier"""
+"""Hand Sign Recognition Classifier using MobileNetV2"""
 
 import glob
 import os
@@ -24,6 +24,7 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
             glob.glob(os.path.join(folder, "*.png")) + \
             glob.glob(os.path.join(folder, "*.jpeg")):
             img = cv2.imread(img_path)
+            img = cv2.resize(img, (224,224))
             if img is not None:
                 X.append(img)
                 Y.append(label)
@@ -126,6 +127,8 @@ def main():
 
     # Evaluate the model
     model = evaluate_on_test(x_train, y_train, x_test, y_test, input_shape, num_classes)
+
+    # Save the model
     model.save("data/model.keras")
 
 
