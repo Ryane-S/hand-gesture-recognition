@@ -1,4 +1,4 @@
-"""Hand Sign Recognition Classifier"""
+"""Hand Sign Recognition Classifier using MobileNetV2."""
 
 import glob
 import os
@@ -24,13 +24,14 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
             glob.glob(os.path.join(folder, "*.png")) + \
             glob.glob(os.path.join(folder, "*.jpeg")):
             img = cv2.imread(img_path)
+            img = cv2.resize(img, (224,224))
             if img is not None:
                 X.append(img)
                 Y.append(label)
         label += 1
 
     # Convert to numpy arrays
-    X, Y = np.array(X, np.array(Y))
+    X, Y = np.array(X), np.array(Y)
 
     # Shuffle the data
     indexes = np.random.permutation(len(X))
@@ -63,17 +64,15 @@ def prepare_data(x_train:np.ndarray, y_train:np.ndarray, x_test:np.ndarray, y_te
     return x_train, y_train, x_test, y_test, input_shape, num_classes
 
 
-def cnn_model(input_shape, num_classes) -> keras.models.Sequential:
+def cnn_model(input_shape:tuple[int, int, int], num_classes:int) -> keras.models.Sequential:
     """Build and compile the model."""
-    # Load the pretrained model (MobileNetV2)
+    # Load the pretrained MobileNetV2 architecture and freeze it
     base_model = keras.applications.MobileNetV2(
         input_shape=input_shape,
         classes=num_classes,
         include_top=False,
         weights='imagenet'
     )
-
-    # Freeze the model
     base_model.trainable = False
 
     # Initialize the model
@@ -82,7 +81,7 @@ def cnn_model(input_shape, num_classes) -> keras.models.Sequential:
     # Add architecture
     model.add(keras.Input(shape=input_shape))
     model.add(base_model)
-    model.add(keras.layers.Flatten())
+    model.add(keras.layers.GlobalAveragePooling2D())
     model.add(keras.layers.Dense(256, activation='relu'))
     model.add(keras.layers.BatchNormalization())
     model.add(keras.layers.Dropout(0.4))
@@ -91,7 +90,7 @@ def cnn_model(input_shape, num_classes) -> keras.models.Sequential:
     model.add(keras.layers.Dropout(0.3))
         
     # Add the output layer
-    keras.layers.Dense(num_classes, activation='softmax')
+    model.add(keras.layers.Dense(num_classes, activation='softmax'))
     
     # Compile the model
     model.compile(
@@ -100,8 +99,10 @@ def cnn_model(input_shape, num_classes) -> keras.models.Sequential:
         metrics=['accuracy']
     )
 
+    return model
 
-def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, input_shape:tuple[int, int, int], num_classes: int,) -> float:
+
+def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, input_shape:tuple[int, int, int], num_classes: int,) -> keras.models.Sequential:
     """Train the CNN on the full training set and evaluate accuracy on the test set."""
     # Build the model
     model = cnn_model(input_shape, num_classes)
@@ -113,6 +114,7 @@ def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
     scores = model.evaluate(x_test, y_test, verbose=0)
 
     print(f"Test accuracy: {scores[1]:.4f}")
+    return model
 
 
 def main():
@@ -124,7 +126,10 @@ def main():
     x_train, y_train, x_test, y_test, input_shape, num_classes = prepare_data(x_train, y_train, x_test, y_test)
 
     # Evaluate the model
-    evaluate_on_test(x_train, y_train, x_test, y_test, input_shape, num_classes)
+    model = evaluate_on_test(x_train, y_train, x_test, y_test, input_shape, num_classes)
+
+    # Save the model
+    model.save("data/model.keras")
 
 
 if __name__ == "__main__":
