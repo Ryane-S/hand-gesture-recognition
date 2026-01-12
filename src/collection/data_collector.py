@@ -17,7 +17,7 @@ counter = 0
 labels = list(string.ascii_uppercase)
 
 # We save images when we press the S key (to train our model)
-folder = "data/F"
+folder = "data/I"
 
 while True:
     success, img = cap.read()
