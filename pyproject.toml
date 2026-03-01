@@ -5,6 +5,7 @@ target-version = "py311"
 [tool.ruff.lint]
 ignore = [
     "E501",
+    "SIM113"
 ]
 
 select = [
