@@ -8,24 +8,30 @@ import cv2
 import keras
 import numpy as np
 
+from pathlib import Path
+
 english_alphabet = list(string.ascii_uppercase)
 dict_classes = {label:character for label,character in enumerate(english_alphabet)}
 
 
 def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Load the dataset."""
+    current_file = Path(__file__).resolve()
+    project_root = current_file.parent.parent.parent
+    data_dir = project_root / "data"
+    
     X = []
     Y = []
     label = 0
-
+    
     # Iterate through the data folder
-    for folder in sorted(glob.glob("data/*/")):
-        for img_path in glob.glob(os.path.join(folder, "*.jpg")) + \
-            glob.glob(os.path.join(folder, "*.png")) + \
-            glob.glob(os.path.join(folder, "*.jpeg")):
-            img = cv2.imread(img_path)
-            img = cv2.resize(img, (224,224))
+    folders = sorted([f for f in data_dir.iterdir() if f.is_dir()])
+    
+    for folder in folders:
+        for img_path in list(folder.glob("*.jpg")) + list(folder.glob("*.png")) + list(folder.glob("*.jpeg")):
+            img = cv2.imread(str(img_path))
             if img is not None:
+                img = cv2.resize(img, (224,224))
                 X.append(img)
                 Y.append(label)
         label += 1
