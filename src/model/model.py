@@ -1,14 +1,11 @@
 """Hand Sign Recognition Classifier using MobileNetV2."""
 
-import glob
-import os
 import string
+from pathlib import Path
 
 import cv2
 import keras
 import numpy as np
-
-from pathlib import Path
 
 english_alphabet = list(string.ascii_uppercase)
 dict_classes = {label:character for label,character in enumerate(english_alphabet)}
