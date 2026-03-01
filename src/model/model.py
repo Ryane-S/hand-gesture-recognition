@@ -19,7 +19,7 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     label = 0
 
     # Iterate through the data folder
-    for folder in sorted(glob.glob("data/*/")):
+    for folder, label in enumerate(sorted(glob.glob("data/*/"))):
         for img_path in glob.glob(os.path.join(folder, "*.jpg")) + \
             glob.glob(os.path.join(folder, "*.png")) + \
             glob.glob(os.path.join(folder, "*.jpeg")):
@@ -28,7 +28,6 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
             if img is not None:
                 X.append(img)
                 Y.append(label)
-        label += 1
 
     # Convert to numpy arrays
     X, Y = np.array(X), np.array(Y)

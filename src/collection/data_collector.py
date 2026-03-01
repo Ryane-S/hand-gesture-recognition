@@ -1,3 +1,5 @@
+"""This module captures hand gesture images using a webcam and saves them for training a deep learning model.""" 
+
 import math
 import string
 import time
