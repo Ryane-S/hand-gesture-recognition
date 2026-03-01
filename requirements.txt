@@ -1,6 +1,7 @@
 numpy==1.26.4
 mediapipe
-tensorflow
+tensorflow==2.20.0
 matplotlib
 h5py
 cvzone
+ruff
