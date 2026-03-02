@@ -11,14 +11,14 @@ from cvzone.HandTrackingModule import HandDetector
 
 cap = cv2.VideoCapture(0) # 0 is the id number
 detector = HandDetector(maxHands=1)
-classifier = Classifier("data/model.keras", "data/label.txt")
+classifier = Classifier("data/best_model.keras", "data/label.txt")
 
 offset = 20
 img_size = 300
 counter = 0
 labels = list(string.ascii_uppercase)
 
-# We save images when we press the S key (to train our model)
+# We save images when we press the S key (to train our model for example)
 folder = "data/I"
 
 while True:
