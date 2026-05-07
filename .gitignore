@@ -1,8 +1,8 @@
 # Virtual environments
-.venv
+**/.venv
 
 # Pre-compiled Python modules & cache directory
-__pycache__
-*.pyc
+**/__pycache__
+**/.pyc
 
-data/*/
+**/data/
