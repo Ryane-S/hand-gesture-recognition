@@ -1,25 +1,20 @@
-[tool.ruff]
-line-length = 88
-target-version = "py311"
-
-[tool.ruff.lint]
-ignore = [
-    "E501",
-    "SIM113"
+[project]
+name = "hand-gesture-recognition"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "cvzone==1.6.1",
+    "matplotlib==3.10.8",
+    "mediapipe==0.10.18",
+    "mypy>=1.10.1",
+    "numpy==1.24.3",
+    "opencv-python==4.10.0.84",
+    "protobuf==4.25.3",
+    "pytest>=9.0.3",
+    "ruff==0.14.10",
+    "tensorflow==2.13.0",
+    "tensorflow-io-gcs-filesystem==0.37.1",
+    "typing-extensions==4.5.0",
 ]
-
-select = [
-    "D",   # pydocstyle (docstring styling)
-    "E",   # pycodestyle (styling)
-    "F",   # PyFlakes (linting)
-    "UP",  # pyupgrade (rules about syntax upgrades)
-    "B",   # flake8-bugbear (common bugs from Python traps)
-    "SIM", # flake8-simplify (simplifying expressions)
-    "I",   # isort (sorting import statements)
-]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = ["D"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "pep257"

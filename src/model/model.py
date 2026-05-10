@@ -17,8 +17,8 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     project_root = current_file.parent.parent.parent
     data_dir = project_root / "data"
     
-    X = []
-    Y = []
+    images = []
+    labels = []
     label = 0
     
     # Iterate through the data folder
@@ -29,12 +29,12 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
             img = cv2.imread(str(img_path))
             if img is not None:
                 img = cv2.resize(img, (224,224))
-                X.append(img)
-                Y.append(label)
+                images.append(img)
+                labels.append(label)
         label += 1
 
     # Convert to numpy arrays
-    X, Y = np.array(X), np.array(Y)
+    X, Y = np.array(images), np.array(labels)
 
     # Shuffle the data
     indexes = np.random.permutation(len(X))
@@ -120,7 +120,7 @@ def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
     return model
 
 
-def main():
+def main() -> None :
     """Run the model on the loaded dataset."""
     # Load the dataset
     x_train, y_train, x_test, y_test = load_data()
