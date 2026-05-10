@@ -1,4 +1,4 @@
-"""Hand Sign Recognition Classifier using MobileNetV2."""
+"""Hand Sign Recognition Classifier using MobileNetV2 for lighter datasets."""
 
 import string
 from pathlib import Path
@@ -8,8 +8,11 @@ import keras
 import numpy as np
 
 english_alphabet = list(string.ascii_uppercase)
-dict_classes = {label:character for label,character in enumerate(english_alphabet)}
+numbers = [str(i) for i in range(10)]
 
+classes = english_alphabet + numbers
+
+dict_classes = {label:character for label,character in enumerate(classes)}
 
 def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """Load the dataset."""
@@ -25,12 +28,17 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     folders = sorted([f for f in data_dir.iterdir() if f.is_dir()])
     
     for folder in folders:
+        count = 0
         for img_path in list(folder.glob("*.jpg")) + list(folder.glob("*.png")) + list(folder.glob("*.jpeg")):
+            if count > 300:
+                break
             img = cv2.imread(str(img_path))
+            print(f"Retrieving images from {img_path}")
             if img is not None:
                 img = cv2.resize(img, (224,224))
                 images.append(img)
                 labels.append(label)
+            count += 1
         label += 1
 
     # Convert to numpy arrays
@@ -50,18 +58,13 @@ def load_data() -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
 
 def prepare_data(x_train:np.ndarray, y_train:np.ndarray, x_test:np.ndarray, y_test:np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, tuple[int, int, int], int]:
     """Reshape, normalize images and one-hot encode labels for model training."""
-    # Reshape the data to be of size [samples][width][height][channels]
-    x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], x_train.shape[2], 3).astype('float32')
-    x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 3).astype('float32')
-    input_shape = (x_train.shape[1], x_train.shape[2], 3)
-
-    # Normalize the input values
-    x_train = x_train / 255
-    x_test = x_test / 255
-
-    # Transform the classes labels into a binary matrix
+    # Reshape and normalize the data
+    x_train = x_train.astype('float32') / 255
+    x_test = x_test.astype('float32') / 255
     y_train = keras.utils.to_categorical(y_train)
     y_test = keras.utils.to_categorical(y_test)
+
+    input_shape = (x_train.shape[1], x_train.shape[2], 3)
     num_classes = y_train.shape[1]
 
     return x_train, y_train, x_test, y_test, input_shape, num_classes
@@ -98,7 +101,7 @@ def cnn_model(input_shape:tuple[int, int, int], num_classes:int) -> keras.models
     # Compile the model
     model.compile(
         loss='categorical_crossentropy', 
-        optimizer=keras.optimizers.Adam(learning_rate=0.01), 
+        optimizer=keras.optimizers.Adam(learning_rate=0.001), 
         metrics=['accuracy']
     )
 
@@ -108,12 +111,15 @@ def cnn_model(input_shape:tuple[int, int, int], num_classes:int) -> keras.models
 def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarray, y_test: np.ndarray, input_shape:tuple[int, int, int], num_classes: int,) -> keras.models.Sequential:
     """Train the CNN on the full training set and evaluate accuracy on the test set."""
     # Build the model
+    print("Building the model")
     model = cnn_model(input_shape, num_classes)
 
     # Train on the full training dataset
+    print("Training the model")
     model.fit(x_train, y_train, epochs=5, batch_size=32, verbose=1)
 
     # Evaluate on the test dataset
+    print("Evaluating the model")
     scores = model.evaluate(x_test, y_test, verbose=0)
 
     print(f"Test accuracy: {scores[1]:.4f}")
@@ -123,15 +129,19 @@ def evaluate_on_test(x_train: np.ndarray, y_train: np.ndarray, x_test: np.ndarra
 def main() -> None :
     """Run the model on the loaded dataset."""
     # Load the dataset
+    print("Loading data...")
     x_train, y_train, x_test, y_test = load_data()
 
     # Preprocess the data
+    print("Preprocessing data...")
     x_train, y_train, x_test, y_test, input_shape, num_classes = prepare_data(x_train, y_train, x_test, y_test)
 
     # Evaluate the model
+    print("Training and evaluating model...")
     model = evaluate_on_test(x_train, y_train, x_test, y_test, input_shape, num_classes)
 
     # Save the model
+    print("Saving the model")
     model.save("data/model.keras")
 
 

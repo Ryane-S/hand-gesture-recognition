@@ -4,9 +4,9 @@
 
 A deep learning system that classifies hand sign gestures corresponding to alphabetic characters (A–Z) using convolutional neural networks.
 
-The model uses transfer learning with the MobileNetV2 architecture and is trained on the ASL Alphabet dataset available on Kaggle:
+The model uses transfer learning with the MobileNetV2 architecture and is trained on the ASL-HG dataset available on Mendeley Data:
 
-[ASL Alphabet Dataset on Kaggle](https://www.kaggle.com/datasets/grassknoted/asl-alphabet)
+[ASL-HG: American Sign Language Hand Gesture Image Dataset](https://data.mendeley.com/datasets/j4y5w2c8w9/1)
 
 ![Sign Language](data/The-26-letters-and-10-digits-of-American-Sign-Language-ASL.png)
 
@@ -90,11 +90,3 @@ python src\collection\data_collector.py
 - TensorFlow / Keras
 - Real-time webcam inference
 - American Sign Language alphabet recognition (A–Z)
-
----
-
-# 📁 Dataset
-
-This project uses the ASL Alphabet dataset from Kaggle:
-
-[Kaggle Dataset](https://www.kaggle.com/datasets/grassknoted/asl-alphabet)
