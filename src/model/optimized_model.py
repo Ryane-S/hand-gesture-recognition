@@ -124,7 +124,12 @@ def main() -> None:
         validation_data=val_gen,
         validation_steps=val_gen.samples // batch_size,
         callbacks=[
-            keras.callbacks.ModelCheckpoint('data/model.keras', save_best_only=True, monitor='val_accuracy'),
+            keras.callbacks.ModelCheckpoint(
+                'data/model.weights.h5',
+                save_best_only=True,
+                save_weights_only=True,
+                monitor='val_accuracy'
+            ),
             keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
             keras.callbacks.ReduceLROnPlateau(factor=0.5, patience=3)
         ],
