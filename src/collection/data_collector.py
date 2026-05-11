@@ -16,7 +16,7 @@ classifier = Classifier("data/model.keras", "data/label.txt")
 offset = 20
 img_size = 300
 counter = 0
-labels = list(string.ascii_uppercase)
+labels = list(string.ascii_uppercase) + [str(i) for i in range(10)]
 
 # We save images when we press the S key (to train our model for example)
 folder = "data/I"

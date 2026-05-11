@@ -2,6 +2,7 @@
 
 import string
 from pathlib import Path
+from collections import Counter
 
 import keras
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -110,6 +111,14 @@ def main() -> None:
     num_classes = train_gen.num_classes
     print(f"Number of classes: {num_classes}")
     
+    # Compute class weights
+    all_labels = train_gen.labels
+    class_counts = Counter(all_labels)
+    total_samples = len(all_labels)
+    n_classes = len(class_counts)
+    
+    class_weight = {cls: total_samples / (n_classes * count) for cls, count in class_counts.items()}
+
     # Model building
     print("Building model...")
     model = cnn_model(input_shape, num_classes)
@@ -123,6 +132,7 @@ def main() -> None:
         epochs=epochs,
         validation_data=val_gen,
         validation_steps=val_gen.samples // batch_size,
+        class_weight=class_weight,
         callbacks=[
             keras.callbacks.ModelCheckpoint(
                 'data/model.weights.h5',
