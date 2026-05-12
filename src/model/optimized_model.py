@@ -5,6 +5,7 @@ from pathlib import Path
 from collections import Counter
 
 import keras
+import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 english_alphabet = list(string.ascii_uppercase)
@@ -96,6 +97,32 @@ def cnn_model(input_shape:tuple[int, int, int], num_classes:int) -> keras.models
     return model
 
 
+def plot_training_history(history):
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+    
+    # Loss
+    ax1.plot(history.history['loss'], label='Train Loss')
+    ax1.plot(history.history['val_loss'], label='Validation Loss')
+    ax1.set_title('Loss')
+    ax1.set_xlabel('Epoch')
+    ax1.set_ylabel('Loss')
+    ax1.legend()
+    ax1.grid(True)
+    
+    # Accuracy
+    ax2.plot(history.history['accuracy'], label='Train Accuracy')
+    ax2.plot(history.history['val_accuracy'], label='Validation Accuracy')
+    ax2.set_title('Accuracy')
+    ax2.set_xlabel('Epoch')
+    ax2.set_ylabel('Accuracy')
+    ax2.legend()
+    ax2.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('training_curves.png')
+    plt.show()
+
+
 def main() -> None:
     # Training configuration
     data_dir = "data"
@@ -126,7 +153,7 @@ def main() -> None:
     
     # Model training
     print("Training...")
-    model.fit(
+    history = model.fit(
         train_gen,
         steps_per_epoch=train_gen.samples // batch_size,
         epochs=epochs,
@@ -146,6 +173,7 @@ def main() -> None:
         verbose=1
     )
     
+    plot_training_history(history)
     # Saving final model
     print("Saving final model...")
     model.save('data/model.h5')
