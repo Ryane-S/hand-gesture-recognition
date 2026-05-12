@@ -176,6 +176,7 @@ def main() -> None:
     plot_training_history(history)
     # Saving final model
     print("Saving final model...")
+    model.save('data/model.keras')
     model.save('data/model.h5')
 
 if __name__ == "__main__":

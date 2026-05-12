@@ -50,20 +50,6 @@ cd hand-gesture-recognition
 uv sync
 ```
 
-## Activate the virtual environment
-
-### Linux / macOS
-
-```bash
-source .venv/bin/activate
-```
-
-### Windows
-
-```powershell
-.venv\Scripts\activate
-```
-
 ---
 
 # ▶️ Run the Application
@@ -73,13 +59,13 @@ Launch the webcam interface:
 ### Linux / macOS
 
 ```bash
-python main.py
+uv run python src/main.py
 ```
 
 ### Windows
 
 ```powershell
-python src\collection\data_collector.py
+uv run python src\main.py
 ```
 
 ---
