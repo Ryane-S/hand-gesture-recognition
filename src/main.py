@@ -1,4 +1,4 @@
-from src.collection.data_collector import launch_webcam
+from collection.data_collector import launch_webcam
 
 def main() -> None:
     launch_webcam()

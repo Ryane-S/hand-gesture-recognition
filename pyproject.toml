@@ -22,3 +22,6 @@ dependencies = [
 override-dependencies = [
     "tensorflow-io-gcs-filesystem==0.37.1 ; sys_platform == 'linux' or sys_platform == 'darwin'"
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

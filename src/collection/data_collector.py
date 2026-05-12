@@ -11,7 +11,7 @@ from cvzone.HandTrackingModule import HandDetector
 
 cap = cv2.VideoCapture(0) # 0 is the id number
 detector = HandDetector(maxHands=1)
-classifier = Classifier("data/model.keras", "data/label.txt")
+classifier = Classifier("data\model.h5", "data\label.txt")
 
 offset = 20
 img_size = 300
