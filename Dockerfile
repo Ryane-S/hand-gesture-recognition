@@ -26,8 +26,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen
 
-# Copier le code source et les modèles (root)
-COPY main.py .
+# Copier le code source et les modèles (root).
 COPY src/ src/
 COPY data/model.keras data/label.txt data/
 
@@ -39,4 +38,4 @@ RUN useradd --create-home --shell /bin/bash appuser \
 USER appuser
 
 # Lancer l'application
-CMD ["uv", "run", "python", "main.py"]
+CMD ["uv", "run", "python", "src/main.py"]
