@@ -11,14 +11,12 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 english_alphabet = list(string.ascii_uppercase)
 numbers = [str(i) for i in range(10)]
 classes = english_alphabet + numbers
-dict_classes = {label: char for label, char in enumerate(classes)}
 num_classes = len(classes)
 
 def create_generators(data_dir:str, batch_size:int=32, img_size:tuple[int, int]=(224, 224), validation_split:float=0.2) -> tuple[ImageDataGenerator, ImageDataGenerator]:
     """Create training and validation generations."""
-
-    # Retrieve images paths
-    folders = [f.name for f in Path(data_dir).iterdir() if f.is_dir()]
+    
+    folders = [f for f in classes if (Path(data_dir) / f).is_dir()]
     print(f"Found {len(folders)} total folders.")
     
     # Data augmentation for training
@@ -120,7 +118,6 @@ def plot_training_history(history):
     
     plt.tight_layout()
     plt.savefig('training_curves.png')
-    plt.show()
 
 
 def main() -> None:
